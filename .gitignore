@@ -21,3 +21,8 @@ womens faceshape/
 .idea/
 .vscode/
 
+
+# Exclude models and notebooks for deploy
+codebase/codebase/*faceshape_model.h5
+codebase/*.ipynb
+
