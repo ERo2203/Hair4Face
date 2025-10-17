@@ -108,7 +108,6 @@ if img_file_buffer is not None:
         overlay = metrics_out.get("overlay_points")
         if overlay:
             import numpy as np
-            import cv2
             img = cv2.imread(image_path)
             h, w = img.shape[:2]
             draw = img.copy()
