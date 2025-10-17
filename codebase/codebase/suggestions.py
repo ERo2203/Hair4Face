@@ -1,7 +1,11 @@
 import pandas as pd
+from pathlib import Path
 
-_MEN_CSV = "/Users/rohanrao/Desktop/hair4face/codebase/resultmen.csv"
-_WOMEN_CSV = "/Users/rohanrao/Desktop/hair4face/codebase/resultwomen.csv"
+# Resolve CSV paths relative to this file: codebase/codebase/ → parent is codebase/
+_MODULE_DIR = Path(__file__).resolve().parent
+_CSV_DIR = _MODULE_DIR.parent
+_MEN_CSV = _CSV_DIR / "resultmen.csv"
+_WOMEN_CSV = _CSV_DIR / "resultwomen.csv"
 
 _men_df = None
 _women_df = None
