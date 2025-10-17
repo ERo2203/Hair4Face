@@ -5,7 +5,7 @@ try:
 except Exception:
     mp = None
 
-mp_face_mesh = mp.solutions.face_mesh
+mp_face_mesh = mp.solutions.face_mesh if mp is not None else None
 
 
 def _to_px(lm, w, h):
