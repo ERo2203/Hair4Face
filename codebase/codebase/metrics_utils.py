@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
-import mediapipe as mp
+try:
+    import mediapipe as mp
+except Exception:
+    mp = None
 
 mp_face_mesh = mp.solutions.face_mesh
 
@@ -27,6 +30,9 @@ def compute_facial_metrics(image_path: str) -> dict:
         raise ValueError(f"Could not read image: {image_path}")
     h, w = image.shape[:2]
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    if mp_face_mesh is None:
+        raise RuntimeError("MediaPipe not available in this environment.")
 
     with mp_face_mesh.FaceMesh(static_image_mode=True,
                                max_num_faces=1,

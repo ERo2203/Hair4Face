@@ -72,17 +72,28 @@ if img_file_buffer is not None:
     st.image(image_path, caption="Captured", use_container_width=True)
 
     # Metrics (MediaPipe)
-    metrics_out = run_metrics_inference(image_path, gender)
+    try:
+        metrics_out = run_metrics_inference(image_path, gender)
+        metrics_error = None
+    except Exception as e:
+        metrics_out = None
+        metrics_error = str(e)
 
     # Model
     model_out = predict_face_shape(image_path, gender)
 
-    # Fusion
-    fused_shape = fuse_face_shape(metrics_out["face_shape"], model_out.get("probs", {}), gender)
+    # Fusion (if metrics available)
+    fused_shape = None
+    if metrics_out is not None:
+        fused_shape = fuse_face_shape(metrics_out["face_shape"], model_out.get("probs", {}), gender)
+    elif model_out and model_out.get("face_shape"):
+        fused_shape = model_out["face_shape"]
+    else:
+        fused_shape = "oval"
 
     # Compose final categories
-    interocular_category = metrics_out["interocular_category"]
-    nose_category = metrics_out["nose_category"]
+    interocular_category = metrics_out["interocular_category"] if metrics_out else "average"
+    nose_category = metrics_out["nose_category"] if metrics_out else "average"
 
     # Suggestions
     sugg = fetch_suggestions(gender, fused_shape, interocular_category, nose_category)
@@ -100,12 +111,12 @@ if img_file_buffer is not None:
             """,
             unsafe_allow_html=True,
         )
-        thirds = metrics_out.get("thirds", {})
+        thirds = metrics_out.get("thirds", {}) if metrics_out else {}
         st.markdown("**Facial Thirds (normalized)**")
         st.write({k: round(float(v), 2) for k, v in thirds.items()})
 
         # Annotated overlay
-        overlay = metrics_out.get("overlay_points")
+        overlay = metrics_out.get("overlay_points") if metrics_out else None
         if overlay:
             import numpy as np
             img = cv2.imread(image_path)
@@ -157,6 +168,8 @@ if img_file_buffer is not None:
             face_length_px = euclid(forehead, chin)
 
             st.image(cv2.cvtColor(draw, cv2.COLOR_BGR2RGB), caption=f"Measurement overlay (face length: {face_length_px:.0f}px)", use_container_width=True)
+        elif metrics_error:
+            st.info(f"Metrics unavailable: {metrics_error}")
 
     with col2:
         st.subheader("Hairstyle Suggestions")

@@ -2,6 +2,4 @@ streamlit>=1.28
 opencv-python-headless==4.8.1.78
 numpy==1.26.4
 pandas==2.2.3
-mediapipe==0.10.14
-protobuf==4.25.3
 Pillow>=9.5
