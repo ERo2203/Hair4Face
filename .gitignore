@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv/
+venv/
+.venv312/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data and large local datasets (keep models, ignore raw datasets)
+mens faceshape/
+womens faceshape/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / Editors
+.idea/
+.vscode/
+
